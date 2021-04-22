@@ -56,7 +56,6 @@ const text2png = (text, options = {}) => {
         const { width } = ctx.measureText(s + char);
         if (width <= options.maxWidth) {
           s += char;
-          console.log(s);
         } else {
           lines += s + "\n";
           s = char;
