@@ -9,6 +9,7 @@ const { registerFont, createCanvas } = require("canvas");
  * @param [options.color="black"] (or options.textColor) text color
  * @param [options.backgroundColor] (or options.bgColor) background color
  * @param [options.lineSpacing=0]
+ * @param [options.maxWidth=undefined]
  * @param [options.strokeWidth=0]
  * @param [options.strokeColor='white']
  * @param [options.padding=0] width of the padding area (left, top, right, bottom)
@@ -43,11 +44,34 @@ const text2png = (text, options = {}) => {
     left: 0,
     right: 0,
     ascent: 0,
-    descent: 0
+    descent: 0,
   };
 
+  let lines = "";
+  if (options.maxWidth) {
+    text.split("\n").forEach((line) => {
+      ctx.font = options.font;
+      let s = "";
+      for (const char of line) {
+        const { width } = ctx.measureText(s + char);
+        if (width <= options.maxWidth) {
+          s += char;
+          console.log(s);
+        } else {
+          lines += s + "\n";
+          s = char;
+        }
+      }
+      if (s) {
+        lines += s;
+      }
+      lines += "\n";
+    });
+  }
+
+  text = lines;
   let lastDescent;
-  const lineProps = text.split("\n").map(line => {
+  const lineProps = text.split("\n").map((line) => {
     ctx.font = options.font;
     const metrics = ctx.measureText(line);
 
@@ -124,7 +148,7 @@ const text2png = (text, options = {}) => {
   ctx.strokeStyle = options.strokeColor;
 
   let offsetY = options.borderTopWidth + options.paddingTop;
-  lineProps.forEach(lineProp => {
+  lineProps.forEach((lineProp) => {
     // Calculate Y
     let x = 0;
     let y = max.ascent + offsetY;
@@ -152,7 +176,7 @@ const text2png = (text, options = {}) => {
 
     ctx.fillText(lineProp.line, x, y);
 
-    if ( options.strokeWidth > 0 ) {
+    if (options.strokeWidth > 0) {
       ctx.strokeText(lineProp.line, x, y);
     }
 
@@ -180,7 +204,7 @@ function parseOptions(options) {
     textColor: or(options.textColor, options.color, "black"),
     backgroundColor: or(options.bgColor, options.backgroundColor, null),
     lineSpacing: or(options.lineSpacing, 0),
-
+    maxWidth: or(options.maxWidth, undefined),
     strokeWidth: or(options.strokeWidth, 0),
     strokeColor: or(options.strokeColor, "white"),
 
@@ -198,7 +222,7 @@ function parseOptions(options) {
     localFontName: or(options.localFontName, null),
     localFontPath: or(options.localFontPath, null),
 
-    output: or(options.output, "buffer")
+    output: or(options.output, "buffer"),
   };
 }
 
