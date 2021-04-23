@@ -120,18 +120,17 @@ const text2png = (text, options = {}) => {
   if (hasBorder) {
     ctx.fillStyle = options.borderColor;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  }
-
-  if (options.backgroundColor) {
-    ctx.fillStyle = options.backgroundColor;
-    ctx.fillRect(
+    ctx.clearRect(
       options.borderLeftWidth,
       options.borderTopWidth,
       canvas.width - (options.borderLeftWidth + options.borderRightWidth),
       canvas.height - (options.borderTopWidth + options.borderBottomWidth)
     );
-  } else if (hasBorder) {
-    ctx.clearRect(
+  }
+  
+  if (options.backgroundColor) {
+    ctx.fillStyle = options.backgroundColor;
+    ctx.fillRect(
       options.borderLeftWidth,
       options.borderTopWidth,
       canvas.width - (options.borderLeftWidth + options.borderRightWidth),
