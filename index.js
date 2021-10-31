@@ -127,7 +127,7 @@ const text2png = (text, options = {}) => {
       canvas.height - (options.borderTopWidth + options.borderBottomWidth)
     );
   }
-  
+
   if (options.backgroundColor) {
     ctx.fillStyle = options.backgroundColor;
     ctx.fillRect(
@@ -171,12 +171,13 @@ const text2png = (text, options = {}) => {
         x = contentWidth / 2 + options.borderLeftWidth + options.paddingLeft;
         break;
     }
-
-    ctx.fillText(lineProp.line, x, y);
-
     if (options.strokeWidth > 0) {
       ctx.strokeText(lineProp.line, x, y);
     }
+
+    ctx.fillText(lineProp.line, x, y);
+
+
 
     offsetY += lineHeight;
   });
